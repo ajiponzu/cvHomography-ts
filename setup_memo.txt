@@ -1,0 +1,12 @@
+init:
+	npx create-react-app app --template typescript
+	cd app
+	npm install opencv-ts
+
+reinit:
+	cd app
+	npm install npm
+
+run:
+	npm run build
+	npm start

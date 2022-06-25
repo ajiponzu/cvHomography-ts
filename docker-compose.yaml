@@ -1,0 +1,20 @@
+version: '3'
+services:
+  app:
+    image: node:latest
+    container_name: cvHomography-ts
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true # ホットリロードのために必要らしい
+    tty: true
+    command: sh -c "cd app && npm start"
+    volumes:
+      - .:/root/project
+      - ~/.npmrc:/root/.npmrc
+      - react_node_modules_volume:/root/project/app/node_modules # ビルド時間短縮のために必要らしい
+    working_dir: /root/project
+    ports:
+      - 3000:3000
+
+volumes:
+  react_node_modules_volume: # ビルド時間短縮のために必要らしい
