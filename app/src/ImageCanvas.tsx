@@ -1,5 +1,6 @@
 import React from "react";
 import cv, { Mat } from "opencv-ts";
+import './css/ImageCanvas.css'
 
 const ImageCanvas = (props: { canvasName: string }) => {
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +27,9 @@ const ImageCanvas = (props: { canvasName: string }) => {
       <div>
         <input id="fileButton" type="file" onChange={onChangeFile} />
       </div>
-      <canvas id={props.canvasName} onMouseMove={onMouseMoveInImg} />
+      <div>
+        <canvas id={props.canvasName} className='canvas' onMouseMove={onMouseMoveInImg} />
+      </div>
     </div>
   );
 };

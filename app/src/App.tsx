@@ -1,16 +1,32 @@
 import "./css/App.css";
 
-import ImageCanvas from "./ImageCanvas";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useRoutes,
+} from "react-router-dom";
+
+import HomePage from './pages/HomePage'
+import SrcPage from './pages/SrcPage'
+import DstPage from './pages/DstPage'
+import HmgPage from './pages/HmgPage'
 
 const App = () => {
   const srcCanvas: string = "src";
   const dstCanvas: string = "dst";
 
   return (
-    <div className="App">
-      <ImageCanvas canvasName={srcCanvas} />
-      <ImageCanvas canvasName={dstCanvas} />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/src" element={<SrcPage canvasName={srcCanvas} />} />
+          <Route path="/dst" element={<DstPage canvasName={dstCanvas} />} />
+          <Route path="/hmg" element={<HmgPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 
