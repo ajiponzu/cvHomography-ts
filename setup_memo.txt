@@ -5,6 +5,7 @@ init:
 
 reinit:
 	cd app
+	rm package-lock.json
 	npm install npm
 
 run:
