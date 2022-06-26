@@ -3,8 +3,8 @@
     position: fixed;
     width: 36px;
     height: 30px;
-    left: 36px;
-    top: 36px;
+    left: 25px;
+    top: 40px;
 }
 
 /* Color/shape of burger icon bars */
@@ -68,8 +68,8 @@ Note: Beware of modifying this element as it can break the animations - you shou
 /* Individual item */
 .bm-item {
     display: inline-block;
-
-    color: #d1d1d1;
+    color: #ffffff;
+    background: #047bb2;
     margin-bottom: 10px;
     text-align: left;
     text-decoration: none;
@@ -77,5 +77,18 @@ Note: Beware of modifying this element as it can break the animations - you shou
 }
 
 .bm-item:hover {
-    color: #ffffff;
+    color: #ff0f0f;
+    background: #c1fffc;
+}
+
+#runHmg {
+    width: 220px;
+    height: 70px;
+    background: #047bb2;
+    text-align: center;
+    font-size: 25px;
+}
+
+#runHmg:hover {
+    background: #c1fffc;
 }

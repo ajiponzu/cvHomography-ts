@@ -1,14 +1,16 @@
-import React from "react";
-import cv, { Mat } from "opencv-ts";
-import './css/ImageCanvas.css'
+import cv from "opencv-ts";
+import { useDstContext } from './App';
 
-const ImageCanvas = (props: { canvasName: string }) => {
+const DstEditView = () => {
+  const { dstPoints, setDstPoints } = useDstContext();
+  const canvasName = 'dst';
+
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const img = new Image();
       img.onload = () => {
         const mat = cv.imread(img);
-        cv.imshow(props.canvasName, mat);
+        cv.imshow(canvasName, mat);
         mat.delete();
       };
       img.src = URL.createObjectURL(e.target.files[0]);
@@ -19,19 +21,18 @@ const ImageCanvas = (props: { canvasName: string }) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect!.left;
     const y = e.clientY - rect!.top;
-    console.log(`${props.canvasName}::: ${x}:${y}`);
+    // console.log(`${props.canvasName}::: ${x}:${y}`);
   };
-
   return (
-    <div className="ImageCanvas">
+    <div className='SrcEditView'>
       <div>
         <input id="fileButton" type="file" onChange={onChangeFile} />
       </div>
       <div>
-        <canvas id={props.canvasName} className='canvas' onMouseMove={onMouseMoveInImg} />
+        <canvas id={canvasName} onMouseMove={onMouseMoveInImg} />
       </div>
     </div>
   );
 };
 
-export default ImageCanvas;
+export default DstEditView;
