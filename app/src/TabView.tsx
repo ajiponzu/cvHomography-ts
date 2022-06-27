@@ -15,6 +15,7 @@ const TabView = () => {
           <Tab>EditSrc</Tab>
           <Tab>EditDst</Tab>
           <Tab>Result</Tab>
+          <Tab>ResultRect</Tab>
         </TabList>
 
         <TabPanel>
@@ -27,7 +28,10 @@ const TabView = () => {
           <DstEditView />
         </TabPanel>
         <TabPanel>
-          <h1>Contactです</h1>
+          <h1>Result</h1>
+        </TabPanel>
+        <TabPanel>
+          <h1>ResultRect</h1>
         </TabPanel>
       </Tabs>
     </div>

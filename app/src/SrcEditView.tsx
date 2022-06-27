@@ -27,19 +27,20 @@ const SrcEditView = () => {
     }
   };
 
-  const onMouseMoveInImg = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const onCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect!.left;
     const y = e.clientY - rect!.top;
-    // console.log(`${props.canvasName}::: ${x}:${y}`);
+    console.log([x, y]);
   };
+
   return (
     <div className='SrcEditView'>
       <div>
         <input className="fileButton" type="file" onChange={onChangeFile} />
       </div>
       <div>
-        <canvas id={canvasName} className="outputCanvas" onMouseMove={onMouseMoveInImg} />
+        <canvas id={canvasName} className="outputCanvas" onClick={onCanvasClick} />
       </div>
     </div>
   );
