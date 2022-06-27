@@ -68,8 +68,13 @@ export const useDstImgPathContext = () => {
 const App = () => {
   console.log('App');
   /* 射影変換行列作成のための座標. ReactStateを使用して変更を監視 */
-  const [srcPoints, setSrcPoints] = useState([[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]);
-  const [dstPoints, setDstPoints] = useState([[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]);
+  const [srcPoints, setSrcPoints] = useState(
+    [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0],
+    [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]
+  );
+  const [dstPoints, setDstPoints] = useState(
+    [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]
+  );
 
   const srcPointsValue = {
     srcPoints,
