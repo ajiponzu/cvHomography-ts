@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useDstContext } from './App'
+import { useDstPointsContext } from './App'
 import NumberFormat from 'react-number-format';
 import './css/InputPointBox.css'
 
 const DstInputBox = (props: { idx: number }) => {
-  const { dstPoints, setDstPoints } = useDstContext();
+  const { dstPoints, setDstPoints } = useDstPointsContext();
   const [pointX, setPointX] = useState(dstPoints[props.idx][0]);
   const [pointY, setPointY] = useState(dstPoints[props.idx][1]);
 

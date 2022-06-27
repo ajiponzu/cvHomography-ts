@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useSrcContext } from './App'
+import { useSrcPointsContext } from './App'
 import NumberFormat from 'react-number-format';
 import './css/InputPointBox.css'
 
 const SrcInputBox = (props: { idx: number }) => {
-  const { srcPoints, setSrcPoints } = useSrcContext();
+  const { srcPoints, setSrcPoints } = useSrcPointsContext();
 
   /* 入力フォームの数値表示を変更するために, ReactStateを使用. ただし, 元の配列に変更は保存されない */
   const [pointX, setPointX] = useState(srcPoints[props.idx][0]);

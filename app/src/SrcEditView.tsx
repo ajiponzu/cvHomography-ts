@@ -1,19 +1,26 @@
-import cv from "opencv-ts";
-import { useSrcContext } from './App';
+import { useSrcPointsContext, useSrcImgPathContext } from './App';
+import { showImageOnCanvas } from './funcs/ImageProcessing'
 
 const SrcEditView = () => {
-  const { srcPoints, setSrcPoints } = useSrcContext();
+  const canvasName = 'src';
+  const { srcPoints, setSrcPoints } = useSrcPointsContext();
+  const { srcImgPath, setSrcImgPath } = useSrcImgPathContext();
+
+  const img = new Image();
+  img.onload = () => {
+    showImageOnCanvas(canvasName, img); // イベント処理内で呼び出す
+  };
+  img.src = srcImgPath; // 画像のプリロード．プリロードが終わると, おそらくonloadが実行される
 
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       console.log(srcPoints);
       const img = new Image();
       img.onload = () => {
-        const mat = cv.imread(img);
-        cv.imshow('src', mat);
-        mat.delete();
+        showImageOnCanvas(canvasName, img);
       };
       img.src = URL.createObjectURL(e.target.files[0]);
+      setSrcImgPath(img.src);
     }
   };
 
@@ -26,10 +33,10 @@ const SrcEditView = () => {
   return (
     <div className='SrcEditView'>
       <div>
-        <input id="fileButton" type="file" onChange={onChangeFile} />
+        <input className="fileButton" type="file" onChange={onChangeFile} />
       </div>
       <div>
-        <canvas id='src' onMouseMove={onMouseMoveInImg} />
+        <canvas id={canvasName} className="outputCanvas" onMouseMove={onMouseMoveInImg} />
       </div>
     </div>
   );
