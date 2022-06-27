@@ -1,6 +1,6 @@
-import { useDstPointsContext } from './App'
-import NumberFormat from 'react-number-format';
-import './css/InputPointBox.css'
+import { useDstPointsContext } from "./App";
+import NumberFormat from "react-number-format";
+import "./css/InputPointBox.css";
 
 const DstInputBox = (props: { idx: number }) => {
   const { dstPoints, setDstPoints } = useDstPointsContext();
@@ -8,7 +8,7 @@ const DstInputBox = (props: { idx: number }) => {
   return (
     <div className="InputPointBox">
       <h3>point{props.idx}: (x, y)</h3>
-      <div className='inputs' >
+      <div className="inputs">
         <NumberFormat
           value={dstPoints[props.idx][0]}
           onValueChange={(values, _sourceInfo) => {
@@ -16,7 +16,7 @@ const DstInputBox = (props: { idx: number }) => {
             let newPoints = dstPoints.concat();
             newPoints[props.idx][0] = input;
             setDstPoints(newPoints);
-            console.log('inputX');
+            console.log("inputX");
           }}
         />
         <NumberFormat
@@ -26,11 +26,11 @@ const DstInputBox = (props: { idx: number }) => {
             let newPoints = dstPoints.concat();
             newPoints[props.idx][1] = input;
             setDstPoints(newPoints);
-            console.log('inputY');
+            console.log("inputY");
           }}
         />
       </div>
-    </div >
+    </div>
   );
 };
 

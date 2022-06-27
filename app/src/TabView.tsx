@@ -1,14 +1,14 @@
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 
-import HomeView from './HomeView'
-import SrcEditView from './SrcEditView';
-import DstEditView from './DstEditView';
+import HomeView from "./HomeView";
+import SrcEditView from "./SrcEditView";
+import DstEditView from "./DstEditView";
 
 /* タブによって表示コンポーネントの切り替えを行う */
 const TabView = () => {
   return (
-    <div className='TabView'>
+    <div className="TabView">
       <Tabs>
         <TabList>
           <Tab>HOME</Tab>

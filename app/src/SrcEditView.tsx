@@ -1,8 +1,8 @@
-import { useSrcPointsContext, useSrcImgPathContext } from './App';
-import { showImageOnCanvas } from './funcs/ImageProcessing'
+import { useSrcPointsContext, useSrcImgPathContext } from "./App";
+import { showImageOnCanvas } from "./funcs/ImageProcessing";
 
 const SrcEditView = () => {
-  const canvasName = 'src';
+  const canvasName = "src";
   const { srcPoints, setSrcPoints } = useSrcPointsContext();
   const { srcImgPath, setSrcImgPath } = useSrcImgPathContext();
 
@@ -35,12 +35,16 @@ const SrcEditView = () => {
   };
 
   return (
-    <div className='SrcEditView'>
+    <div className="SrcEditView">
       <div>
         <input className="fileButton" type="file" onChange={onChangeFile} />
       </div>
       <div>
-        <canvas id={canvasName} className="outputCanvas" onClick={onCanvasClick} />
+        <canvas
+          id={canvasName}
+          className="outputCanvas"
+          onClick={onCanvasClick}
+        />
       </div>
     </div>
   );

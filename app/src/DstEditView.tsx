@@ -1,8 +1,12 @@
-import { useDstPointsContext, useDstImgPathContext, useSrcPointsContext } from './App';
-import { showImageOnCanvas } from './funcs/ImageProcessing'
+import {
+  useDstPointsContext,
+  useDstImgPathContext,
+  useSrcPointsContext,
+} from "./App";
+import { showImageOnCanvas } from "./funcs/ImageProcessing";
 
 const DstEditView = () => {
-  const canvasName = 'dst';
+  const canvasName = "dst";
   const { dstPoints, setDstPoints } = useDstPointsContext();
   const { dstImgPath, setDstImgPath } = useDstImgPathContext();
   const { srcPoints } = useSrcPointsContext();
@@ -22,7 +26,7 @@ const DstEditView = () => {
       };
       img.src = URL.createObjectURL(e.target.files[0]);
       setDstImgPath(img.src);
-      console.log('dst:' + srcPoints);
+      console.log("dst:" + srcPoints);
     }
   };
 
@@ -33,12 +37,16 @@ const DstEditView = () => {
     // console.log(`${props.canvasName}::: ${x}:${y}`);
   };
   return (
-    <div className='SrcEditView'>
+    <div className="SrcEditView">
       <div>
         <input className="fileButton" type="file" onChange={onChangeFile} />
       </div>
       <div>
-        <canvas id={canvasName} className="outputCanvas" onMouseMove={onMouseMoveInImg} />
+        <canvas
+          id={canvasName}
+          className="outputCanvas"
+          onMouseMove={onMouseMoveInImg}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,3 @@
-
-const HmgResultView = () => {
-
-};
+const HmgResultView = () => {};
 
 export default HmgResultView;

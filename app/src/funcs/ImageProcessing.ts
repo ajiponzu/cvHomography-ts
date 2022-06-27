@@ -17,40 +17,56 @@ opencvの型を使用しないようにする．
 */
 
 /* canvas要素に画像を表示する */
-export const showImageOnCanvas = (canvasName: string, img: HTMLImageElement) => {
-    try { // 一応例外処理
-        const mat = cv.imread(img);
-        cv.imshow(canvasName, mat);
-        mat.delete();
-    } catch (err) {
-        console.log('opencv is not initialized.');
-    }
+export const showImageOnCanvas = (
+  canvasName: string,
+  img: HTMLImageElement
+) => {
+  try {
+    // 一応例外処理
+    const mat = cv.imread(img);
+    cv.imshow(canvasName, mat);
+    mat.delete();
+  } catch (err) {
+    console.log("opencv is not initialized.");
+  }
 };
 
 /* 射影変換後の貼り合わせ画像を表示する */
 /* キャンバスはもう生成されていると考え，canvasNameによる表示・読み込みを用いる */
-export const showHomographyImage = (canvasName: string, srcCanvasName: string, dstCanvasName: string, srcPoints: number[][], dstPoints: number[][]) => {
-    try {
-        const srcPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat());
-        const dstPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat());
+export const showHomographyImage = (
+  canvasName: string,
+  srcCanvasName: string,
+  dstCanvasName: string,
+  srcPoints: number[][],
+  dstPoints: number[][]
+) => {
+  try {
+    const srcPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat());
+    const dstPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat());
 
-        let srcMat = cv.imread(srcCanvasName);
-        let dstMat = cv.imread(dstCanvasName);
+    let srcMat = cv.imread(srcCanvasName);
+    let dstMat = cv.imread(dstCanvasName);
 
-        const transMat = cv.getPerspectiveTransform(srcPointsMat, dstPointsMat);
-        cv.warpPerspective(srcMat, dstMat, transMat, dstMat.size());
-        transMat.delete();
-    } catch (err) {
-        console.log("opencv's error.");
-    };
+    const transMat = cv.getPerspectiveTransform(srcPointsMat, dstPointsMat);
+    cv.warpPerspective(srcMat, dstMat, transMat, dstMat.size());
+    transMat.delete();
+  } catch (err) {
+    console.log("opencv's error.");
+  }
 };
 
 /* 射影変換後の対応座標点の表示 */
-export const showDstImageAddedRect = (canvasName: string, inputPoints: number[][], dstCanvasName: string, srcPoints: number[][], dstPoints: number[][]) => {
-    try {
-        const srcPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat()); // 二次元配列を一次元配列に直す
-        const dstPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat());
-        /* [x, y, x, y, ....]のようになるため, 4, 1, CV_32FC2より
+export const showDstImageAddedRect = (
+  canvasName: string,
+  inputPoints: number[][],
+  dstCanvasName: string,
+  srcPoints: number[][],
+  dstPoints: number[][]
+) => {
+  try {
+    const srcPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat()); // 二次元配列を一次元配列に直す
+    const dstPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat());
+    /* [x, y, x, y, ....]のようになるため, 4, 1, CV_32FC2より
         [
             (x, y), 
             (x, y),
@@ -59,18 +75,18 @@ export const showDstImageAddedRect = (canvasName: string, inputPoints: number[][
         のようなMatが出来上がる
         */
 
-        let dstMat = cv.imread(dstCanvasName);
+    let dstMat = cv.imread(dstCanvasName);
 
-        let outputPoints = cv.matFromArray(4, 1, cv.CV_32FC2, inputPoints.flat());
-        const transMat = cv.getPerspectiveTransform(srcPointsMat, dstPointsMat);
-        cv.perspectiveTransform(srcPointsMat, outputPoints, transMat);
-        transMat.delete();
+    let outputPoints = cv.matFromArray(4, 1, cv.CV_32FC2, inputPoints.flat());
+    const transMat = cv.getPerspectiveTransform(srcPointsMat, dstPointsMat);
+    cv.perspectiveTransform(srcPointsMat, outputPoints, transMat);
+    transMat.delete();
 
-        const center = cv.minAreaRect(outputPoints).center;
-        cv.circle(dstMat, center, 5, new cv.Scalar(0, 0, 255));
-        cv.imshow(canvasName, dstMat);
-        dstMat.delete();
-    } catch (err) {
-        console.log("opencv's error.");
-    };
+    const center = cv.minAreaRect(outputPoints).center;
+    cv.circle(dstMat, center, 5, new cv.Scalar(0, 0, 255));
+    cv.imshow(canvasName, dstMat);
+    dstMat.delete();
+  } catch (err) {
+    console.log("opencv's error.");
+  }
 };

@@ -1,6 +1,6 @@
-import { useSrcPointsContext } from './App'
-import NumberFormat from 'react-number-format';
-import './css/InputPointBox.css'
+import { useSrcPointsContext } from "./App";
+import NumberFormat from "react-number-format";
+import "./css/InputPointBox.css";
 
 const SrcInputBox = (props: { idx: number }) => {
   const { srcPoints, setSrcPoints } = useSrcPointsContext();
@@ -8,7 +8,7 @@ const SrcInputBox = (props: { idx: number }) => {
   return (
     <div className="InputPointBox">
       <h3>point{props.idx}: (x, y)</h3>
-      <div className='inputs'>
+      <div className="inputs">
         <NumberFormat
           value={srcPoints[props.idx][0]}
           onValueChange={(values, _sourceInfo) => {
@@ -17,7 +17,7 @@ const SrcInputBox = (props: { idx: number }) => {
             let newPoints = srcPoints.concat(); // 共有配列のクローン
             newPoints[props.idx][0] = input; // 入力数値の代入
             setSrcPoints(newPoints);
-            console.log('inputX');
+            console.log("inputX");
             /* end */
           }}
         />
@@ -28,11 +28,11 @@ const SrcInputBox = (props: { idx: number }) => {
             let newPoints = srcPoints.concat();
             newPoints[props.idx][1] = input;
             setSrcPoints(newPoints);
-            console.log('inputY');
+            console.log("inputY");
           }}
         />
       </div>
-    </div >
+    </div>
   );
 };
 
