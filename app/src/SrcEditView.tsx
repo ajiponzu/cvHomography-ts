@@ -14,7 +14,10 @@ const SrcEditView = () => {
 
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      console.log(srcPoints);
+      let points = srcPoints.concat();
+      points[2][0] += 1;
+      points[2][1] += 1;
+      setSrcPoints(points);
       const img = new Image();
       img.onload = () => {
         showImageOnCanvas(canvasName, img);

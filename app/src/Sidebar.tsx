@@ -11,13 +11,13 @@ const Sidebar = (props: { pageWrapId: any, outerContainerId: any }) => {
     };
 
     const srcElems: JSX.Element[] = [];
+    for (let i = 0; i < 8; i++) {
+        srcElems.push(<SrcInputBox idx={i} key={i} />);
+    }
+
     const dstElems: JSX.Element[] = [];
     for (let i = 0; i < 4; i++) {
-        srcElems.push(<SrcInputBox idx={i} key={i} />);
         dstElems.push(<DstInputBox idx={i} key={i} />);
-    }
-    for (let i = 4; i < 8; i++) {
-        srcElems.push(<SrcInputBox idx={i} key={i} />);
     }
 
     return (

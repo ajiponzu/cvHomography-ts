@@ -1,10 +1,11 @@
-import { useDstPointsContext, useDstImgPathContext } from './App';
+import { useDstPointsContext, useDstImgPathContext, useSrcPointsContext } from './App';
 import { showImageOnCanvas } from './funcs/ImageProcessing'
 
 const DstEditView = () => {
   const canvasName = 'dst';
   const { dstPoints, setDstPoints } = useDstPointsContext();
   const { dstImgPath, setDstImgPath } = useDstImgPathContext();
+  const { srcPoints } = useSrcPointsContext();
 
   const img = new Image();
   img.onload = () => {
@@ -21,6 +22,7 @@ const DstEditView = () => {
       };
       img.src = URL.createObjectURL(e.target.files[0]);
       setDstImgPath(img.src);
+      console.log('dst:' + srcPoints);
     }
   };
 
