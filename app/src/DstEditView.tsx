@@ -1,7 +1,7 @@
 import {
   useDstPointsContext,
   useDstImgPathContext,
-  useSrcPointsContext,
+  useDstFocusIdxContext,
 } from "./App";
 import { showImageOnCanvas } from "./funcs/ImageProcessing";
 
@@ -9,7 +9,7 @@ const DstEditView = () => {
   const canvasName = "dst";
   const { dstPoints, setDstPoints } = useDstPointsContext();
   const { dstImgPath, setDstImgPath } = useDstImgPathContext();
-  const { srcPoints } = useSrcPointsContext();
+  const { dstFocusIdx } = useDstFocusIdxContext();
 
   const img = new Image();
   img.onload = () => {
@@ -26,18 +26,20 @@ const DstEditView = () => {
       };
       img.src = URL.createObjectURL(e.target.files[0]);
       setDstImgPath(img.src);
-      console.log("dst:" + srcPoints);
     }
   };
 
-  const onMouseMoveInImg = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const onCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect!.left;
     const y = e.clientY - rect!.top;
-    // console.log(`${props.canvasName}::: ${x}:${y}`);
+    let newPoints = dstPoints.concat();
+    newPoints[dstFocusIdx] = [x, y];
+    setDstPoints(newPoints);
   };
+
   return (
-    <div className="SrcEditView">
+    <div className="DstEditView">
       <div>
         <input className="fileButton" type="file" onChange={onChangeFile} />
       </div>
@@ -45,7 +47,7 @@ const DstEditView = () => {
         <canvas
           id={canvasName}
           className="outputCanvas"
-          onMouseMove={onMouseMoveInImg}
+          onClick={onCanvasClick}
         />
       </div>
     </div>

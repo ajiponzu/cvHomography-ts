@@ -26,7 +26,7 @@ export const showImageOnCanvas = (
     cv.imshow(canvasName, mat);
     mat.delete();
   } catch (err) {
-    console.log("opencv is not initialized.");
+    console.log("opencv's error.");
   }
 };
 
@@ -57,32 +57,40 @@ export const showHomographyImage = (
 /* 射影変換後の対応座標点の表示 */
 export const showDstImageAddedRect = (
   canvasName: string,
+  dstImg: HTMLImageElement,
   inputPoints: number[][],
-  dstCanvasName: string,
   srcPoints: number[][],
   dstPoints: number[][]
 ) => {
   try {
+    let dstMat = cv.imread(dstImg);
+
+    let inputPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, inputPoints.flat());
+    let outputPointsMat = cv.matFromArray(
+      4,
+      1,
+      cv.CV_32FC2,
+      inputPoints.flat()
+    );
     const srcPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat()); // 二次元配列を一次元配列に直す
     const dstPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat());
     /* [x, y, x, y, ....]のようになるため, 4, 1, CV_32FC2より
-        [
-            (x, y), 
-            (x, y),
-            .........
-        ]
-        のようなMatが出来上がる
-        */
+      [
+        (x, y), 
+        (x, y),
+        .........
+      ]
+      のようなMatが出来上がる
+      */
 
-    let dstMat = cv.imread(dstCanvasName);
-
-    let outputPoints = cv.matFromArray(4, 1, cv.CV_32FC2, inputPoints.flat());
     const transMat = cv.getPerspectiveTransform(srcPointsMat, dstPointsMat);
-    cv.perspectiveTransform(srcPointsMat, outputPoints, transMat);
+    cv.perspectiveTransform(inputPointsMat, outputPointsMat, transMat);
     transMat.delete();
 
-    const center = cv.minAreaRect(outputPoints).center;
-    cv.circle(dstMat, center, 5, new cv.Scalar(0, 0, 255));
+    const rrect = cv.minAreaRect(outputPointsMat);
+    const rect = rrect.boundingRect();
+    cv.rectangle(dstMat, rect.tl(), rect.br(), new cv.Scalar(0, 0, 255), 3);
+    cv.circle(dstMat, rrect.center, 5, new cv.Scalar(0, 0, 255), -1);
     cv.imshow(canvasName, dstMat);
     dstMat.delete();
   } catch (err) {

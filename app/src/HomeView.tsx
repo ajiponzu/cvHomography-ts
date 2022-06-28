@@ -1,10 +1,10 @@
-import icon from "./assets/homeImage.png";
+import icon from "./assets/homeIcon.png";
 import "./css/HomeView.css";
 
 const HomeView = () => {
   return (
     <div className="HomeView">
-      <img id="icon" src={icon} />
+      <img id="icon" src={icon} alt="背景" />
     </div>
   );
 };

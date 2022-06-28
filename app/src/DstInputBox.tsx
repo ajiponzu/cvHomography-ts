@@ -34,7 +34,9 @@ const DstInputBox = (props: { idx: number }) => {
         style={
           buttonBool ? { background: "#ff0000" } : { background: "#00ff00" }
         }
-      />
+      >
+        put point{props.idx}
+      </button>
       <div className="inputs">
         <NumberFormat
           value={dstPoints[props.idx][0]}

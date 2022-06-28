@@ -8,8 +8,6 @@ import SrcInputBox from "./SrcInputBox";
 import DstInputBox from "./DstInputBox";
 
 const Sidebar = (props: { pageWrapId: any; outerContainerId: any }) => {
-  const onButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {};
-
   const inputElems: JSX.Element[] = [];
   for (let i = 4; i < 8; i++) {
     inputElems.push(<SrcInputBox idx={i} key={i} />);
@@ -28,11 +26,8 @@ const Sidebar = (props: { pageWrapId: any; outerContainerId: any }) => {
   return (
     <div className="Sidebar">
       <Menu>
-        <button id="runHmg" onClick={onButtonClick}>
-          Run Hmg
-        </button>
         <div className="TabView">
-          <Tabs forceRenderTabPanel defaultIndex={1}>
+          <Tabs forceRenderTabPanel defaultIndex={0}>
             <TabList>
               <Tab>SrcPoints</Tab>
               <Tab>DstPoints</Tab>

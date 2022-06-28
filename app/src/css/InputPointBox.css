@@ -4,6 +4,7 @@
 
 .focusButton {
   border-color: black;
-  width: 50px;
+  width: auto;
   height: 30px;
+  border-radius: 5px;
 }

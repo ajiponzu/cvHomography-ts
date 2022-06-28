@@ -23,6 +23,10 @@ interface IDstImgPathContext {
   readonly dstImgPath: string;
   setDstImgPath: React.Dispatch<React.SetStateAction<string>>;
 }
+interface IHmgRectImgPathContext {
+  readonly hmgRectImgPath: string;
+  setHmgRectImgPath: React.Dispatch<React.SetStateAction<string>>;
+}
 
 interface ISrcFocusIdxContext {
   readonly srcFocusIdx: number;
@@ -48,6 +52,9 @@ const SrcImgPathContext = React.createContext<ISrcImgPathContext | undefined>(
 const DstImgPathContext = React.createContext<IDstImgPathContext | undefined>(
   undefined
 );
+const HmgRectImgPathContext = React.createContext<
+  IHmgRectImgPathContext | undefined
+>(undefined);
 
 const SrcFocusIdxContext = React.createContext<ISrcFocusIdxContext | undefined>(
   undefined
@@ -82,6 +89,13 @@ export const useSrcImgPathContext = () => {
 };
 export const useDstImgPathContext = () => {
   const context = useContext(DstImgPathContext);
+  if (context === undefined) {
+    throw new Error("useCount must be used within a CountProvider");
+  }
+  return context;
+};
+export const useHmgRectImgPathContext = () => {
+  const context = useContext(HmgRectImgPathContext);
   if (context === undefined) {
     throw new Error("useCount must be used within a CountProvider");
   }
@@ -136,6 +150,7 @@ const App = () => {
   /* 射影変換対象の画像群. ReactStateを使用して変更を監視 */
   const [srcImgPath, setSrcImgPath] = useState("");
   const [dstImgPath, setDstImgPath] = useState("");
+  const [hmgRectImgPath, setHmgRectImgPath] = useState("");
 
   const srcImgPathValue = {
     srcImgPath,
@@ -144,6 +159,10 @@ const App = () => {
   const dstImgPathValue = {
     dstImgPath,
     setDstImgPath,
+  };
+  const hmgRectImgPathValue = {
+    hmgRectImgPath,
+    setHmgRectImgPath,
   };
   /* end */
 
@@ -164,23 +183,25 @@ const App = () => {
   return (
     <div className="App">
       {/* providerに値を渡し，タグで囲むことでContextの使用を制限することができる */}
-      <SrcFocusIdxContext.Provider value={srcFocusIdxValue}>
-        <DstFocusIdxContext.Provider value={dstFocusIdxValue}>
-          <SrcImgPathContext.Provider value={srcImgPathValue}>
-            <DstImgPathContext.Provider value={dstImgPathValue}>
-              <SrcPointsContext.Provider value={srcPointsValue}>
-                <DstPointsContext.Provider value={dstPointsValue}>
-                  <Sidebar
-                    pageWrapId={"page-wrap"}
-                    outerContainerId={"outer-container"}
-                  />
-                  <TabView />
-                </DstPointsContext.Provider>
-              </SrcPointsContext.Provider>
-            </DstImgPathContext.Provider>
-          </SrcImgPathContext.Provider>
-        </DstFocusIdxContext.Provider>
-      </SrcFocusIdxContext.Provider>
+      <HmgRectImgPathContext.Provider value={hmgRectImgPathValue}>
+        <SrcFocusIdxContext.Provider value={srcFocusIdxValue}>
+          <DstFocusIdxContext.Provider value={dstFocusIdxValue}>
+            <SrcImgPathContext.Provider value={srcImgPathValue}>
+              <DstImgPathContext.Provider value={dstImgPathValue}>
+                <SrcPointsContext.Provider value={srcPointsValue}>
+                  <DstPointsContext.Provider value={dstPointsValue}>
+                    <Sidebar
+                      pageWrapId={"page-wrap"}
+                      outerContainerId={"outer-container"}
+                    />
+                    <TabView />
+                  </DstPointsContext.Provider>
+                </SrcPointsContext.Provider>
+              </DstImgPathContext.Provider>
+            </SrcImgPathContext.Provider>
+          </DstFocusIdxContext.Provider>
+        </SrcFocusIdxContext.Provider>
+      </HmgRectImgPathContext.Provider>
     </div>
   );
 };

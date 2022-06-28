@@ -4,6 +4,7 @@ import "react-tabs/style/react-tabs.css";
 import HomeView from "./HomeView";
 import SrcEditView from "./SrcEditView";
 import DstEditView from "./DstEditView";
+import HmgRectResultView from "./HmgRectResultView";
 
 /* タブによって表示コンポーネントの切り替えを行う */
 const TabView = () => {
@@ -31,7 +32,7 @@ const TabView = () => {
           <h1>Result</h1>
         </TabPanel>
         <TabPanel>
-          <h1>ResultRect</h1>
+          <HmgRectResultView />
         </TabPanel>
       </Tabs>
     </div>
