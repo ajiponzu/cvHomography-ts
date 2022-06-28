@@ -1,13 +1,40 @@
-import { useSrcPointsContext } from "./App";
+import { useSrcPointsContext, useSrcFocusIdxContext } from "./App";
 import NumberFormat from "react-number-format";
 import "./css/InputPointBox.css";
+import { useState } from "react";
 
 const SrcInputBox = (props: { idx: number }) => {
   const { srcPoints, setSrcPoints } = useSrcPointsContext();
+  const { srcFocusIdx, setSrcFocusIdx } = useSrcFocusIdxContext();
+  const [buttonBool, setButtonBool] = useState(false);
+
+  const onButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const currentBool = !buttonBool;
+    setButtonBool(currentBool);
+    if (currentBool) {
+      setSrcFocusIdx(props.idx);
+    } else {
+      setSrcFocusIdx(-1);
+    }
+  };
+
+  /* 別のidのInputBoxコンポーネントにあるボタンが押されたときにbuttonBoolステートをFalseにする */
+  /* ifなしだと無限ループするが, フォーカスがあたっているかどうかとボタンが押されたかどうかが一致するときだけ変更すれば回避できる */
+  const onFocused = props.idx === srcFocusIdx;
+  if (buttonBool && !onFocused) {
+    setButtonBool(onFocused);
+  }
 
   return (
     <div className="InputPointBox">
       <h3>point{props.idx}: (x, y)</h3>
+      <button
+        className="focusButton"
+        onClick={onButtonClick}
+        style={
+          buttonBool ? { background: "#ff0000" } : { background: "#00ff00" }
+        }
+      />
       <div className="inputs">
         <NumberFormat
           value={srcPoints[props.idx][0]}
@@ -17,7 +44,6 @@ const SrcInputBox = (props: { idx: number }) => {
             let newPoints = srcPoints.concat(); // 共有配列のクローン
             newPoints[props.idx][0] = input; // 入力数値の代入
             setSrcPoints(newPoints);
-            console.log("inputX");
             /* end */
           }}
         />
@@ -28,7 +54,6 @@ const SrcInputBox = (props: { idx: number }) => {
             let newPoints = srcPoints.concat();
             newPoints[props.idx][1] = input;
             setSrcPoints(newPoints);
-            console.log("inputY");
           }}
         />
       </div>

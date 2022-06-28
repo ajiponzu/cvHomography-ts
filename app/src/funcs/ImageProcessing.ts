@@ -1,5 +1,4 @@
 import cv from "opencv-ts";
-import Jimp from "jimp";
 
 /* 
 opencvの初期化タイミングによって，関数が見つからないなどの実行時エラーが発生するかもしれない 
