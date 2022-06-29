@@ -10,14 +10,6 @@ import {
   useHmgRectContext,
   useHmgRectImgPathContext,
 } from "./App";
-import { useState } from "react";
-
-const colorStyles = [
-  "rgba(255, 0, 0, 255)",
-  "rgba(0, 255, 0, 255)",
-  "rgba(0, 0, 255, 255)",
-  "rgba(255, 255, 0, 255)",
-];
 
 const HmgRectResultView = () => {
   const canvasName = "hmgRect";
@@ -33,11 +25,11 @@ const HmgRectResultView = () => {
     const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.strokeStyle = "rgb(0, 0, 0)";
+    ctx.fillStyle = "rgba(255, 0, 255, 255)";
     for (let i = 0; i < 4; i++) {
       ctx.beginPath(); // これがないとほかの描画図形と連結したり面を貼ったりしてしまう. 毎回描画情報をリセットするために必要
       const [x, y] = hmgRect[i];
       ctx.arc(x, y, 20, 0, 2 * Math.PI, false);
-      ctx.fillStyle = colorStyles[i];
       ctx.fill();
       ctx.stroke();
     }
