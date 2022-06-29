@@ -1,4 +1,4 @@
-import cv from "opencv-ts";
+import cv, { Point } from "opencv-ts";
 
 /* 
 opencvの初期化タイミングによって，関数が見つからないなどの実行時エラーが発生するかもしれない 
@@ -62,16 +62,12 @@ export const showDstImageAddedRect = (
   srcPoints: number[][],
   dstPoints: number[][]
 ) => {
+  let outputPoints: number[][] = [];
   try {
     let dstMat = cv.imread(dstImg);
 
     let inputPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, inputPoints.flat());
-    let outputPointsMat = cv.matFromArray(
-      4,
-      1,
-      cv.CV_32FC2,
-      inputPoints.flat()
-    );
+    let outputPointsMat = inputPointsMat.clone();
     const srcPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat()); // 二次元配列を一次元配列に直す
     const dstPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat());
     /* [x, y, x, y, ....]のようになるため, 4, 1, CV_32FC2より
@@ -85,15 +81,24 @@ export const showDstImageAddedRect = (
 
     const transMat = cv.getPerspectiveTransform(srcPointsMat, dstPointsMat);
     cv.perspectiveTransform(inputPointsMat, outputPointsMat, transMat);
-    transMat.delete();
-
-    const rrect = cv.minAreaRect(outputPointsMat);
-    const rect = rrect.boundingRect();
-    cv.rectangle(dstMat, rect.tl(), rect.br(), new cv.Scalar(0, 0, 255), 3);
-    cv.circle(dstMat, rrect.center, 5, new cv.Scalar(0, 0, 255), -1);
     cv.imshow(canvasName, dstMat);
+
+    const outputPointsMat32F = outputPointsMat.data32F;
+    for (let i = 0; i < 4; i++) {
+      outputPoints.push([
+        outputPointsMat32F[2 * i],
+        outputPointsMat32F[2 * i + 1],
+      ]);
+    }
+
+    transMat.delete();
     dstMat.delete();
+    srcPointsMat.delete();
+    dstPointsMat.delete();
+    inputPointsMat.delete();
+    outputPointsMat.delete();
   } catch (err) {
     console.log("opencv's error.");
   }
+  return outputPoints;
 };

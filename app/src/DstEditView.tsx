@@ -5,6 +5,13 @@ import {
 } from "./App";
 import { showImageOnCanvas } from "./funcs/ImageProcessing";
 
+const colorStyles = [
+  "rgba(255, 0, 0, 255)",
+  "rgba(0, 255, 0, 255)",
+  "rgba(0, 0, 255, 255)",
+  "rgba(255, 255, 0, 255)",
+];
+
 const DstEditView = () => {
   const canvasName = "dst";
   const { dstPoints, setDstPoints } = useDstPointsContext();
@@ -14,6 +21,17 @@ const DstEditView = () => {
   const img = new Image();
   img.onload = () => {
     showImageOnCanvas(canvasName, img);
+    const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+    ctx.strokeStyle = "rgb(0, 0, 0)";
+    for (let i = 0; i < 4; i++) {
+      ctx.beginPath(); // これがないとほかの描画図形と連結したり面を貼ったりしてしまう. 毎回描画情報をリセットするために必要
+      const [x, y] = dstPoints[i];
+      ctx.arc(x, y, 20, 0, 2 * Math.PI, false);
+      ctx.fillStyle = colorStyles[i];
+      ctx.fill();
+      ctx.stroke();
+    }
   };
   img.src = dstImgPath; // 画像のプリロード．プリロードが終わると, おそらくonloadが実行される
   /* end */

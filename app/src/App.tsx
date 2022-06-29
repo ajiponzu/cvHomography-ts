@@ -14,6 +14,10 @@ interface IDstPointsContext {
   readonly dstPoints: number[][];
   setDstPoints: React.Dispatch<React.SetStateAction<number[][]>>;
 }
+interface IHmgRectContext {
+  readonly hmgRect: number[][];
+  setHmgRect: React.Dispatch<React.SetStateAction<number[][]>>;
+}
 
 interface ISrcImgPathContext {
   readonly srcImgPath: string;
@@ -45,6 +49,9 @@ const SrcPointsContext = React.createContext<ISrcPointsContext | undefined>(
 const DstPointsContext = React.createContext<IDstPointsContext | undefined>(
   undefined
 );
+const HmgRectContext = React.createContext<IHmgRectContext | undefined>(
+  undefined
+);
 
 const SrcImgPathContext = React.createContext<ISrcImgPathContext | undefined>(
   undefined
@@ -74,6 +81,13 @@ export const useSrcPointsContext = () => {
 };
 export const useDstPointsContext = () => {
   const context = useContext(DstPointsContext);
+  if (context === undefined) {
+    throw new Error("useCount must be used within a CountProvider");
+  }
+  return context;
+};
+export const useHmgRectContext = () => {
+  const context = useContext(HmgRectContext);
   if (context === undefined) {
     throw new Error("useCount must be used within a CountProvider");
   }
@@ -136,6 +150,12 @@ const App = () => {
     [0.0, 0.0],
     [0.0, 0.0],
   ]);
+  const [hmgRect, setHmgRect] = useState([
+    [0.0, 0.0],
+    [0.0, 0.0],
+    [0.0, 0.0],
+    [0.0, 0.0],
+  ]);
 
   const srcPointsValue = {
     srcPoints,
@@ -144,6 +164,10 @@ const App = () => {
   const dstPointsValue = {
     dstPoints,
     setDstPoints,
+  };
+  const hmgRectValue = {
+    hmgRect,
+    setHmgRect,
   };
   /* end */
 
@@ -183,25 +207,27 @@ const App = () => {
   return (
     <div className="App">
       {/* providerに値を渡し，タグで囲むことでContextの使用を制限することができる */}
-      <HmgRectImgPathContext.Provider value={hmgRectImgPathValue}>
-        <SrcFocusIdxContext.Provider value={srcFocusIdxValue}>
-          <DstFocusIdxContext.Provider value={dstFocusIdxValue}>
-            <SrcImgPathContext.Provider value={srcImgPathValue}>
-              <DstImgPathContext.Provider value={dstImgPathValue}>
-                <SrcPointsContext.Provider value={srcPointsValue}>
-                  <DstPointsContext.Provider value={dstPointsValue}>
-                    <Sidebar
-                      pageWrapId={"page-wrap"}
-                      outerContainerId={"outer-container"}
-                    />
-                    <TabView />
-                  </DstPointsContext.Provider>
-                </SrcPointsContext.Provider>
-              </DstImgPathContext.Provider>
-            </SrcImgPathContext.Provider>
-          </DstFocusIdxContext.Provider>
-        </SrcFocusIdxContext.Provider>
-      </HmgRectImgPathContext.Provider>
+      <HmgRectContext.Provider value={hmgRectValue}>
+        <HmgRectImgPathContext.Provider value={hmgRectImgPathValue}>
+          <SrcFocusIdxContext.Provider value={srcFocusIdxValue}>
+            <DstFocusIdxContext.Provider value={dstFocusIdxValue}>
+              <SrcImgPathContext.Provider value={srcImgPathValue}>
+                <DstImgPathContext.Provider value={dstImgPathValue}>
+                  <SrcPointsContext.Provider value={srcPointsValue}>
+                    <DstPointsContext.Provider value={dstPointsValue}>
+                      <Sidebar
+                        pageWrapId={"page-wrap"}
+                        outerContainerId={"outer-container"}
+                      />
+                      <TabView />
+                    </DstPointsContext.Provider>
+                  </SrcPointsContext.Provider>
+                </DstImgPathContext.Provider>
+              </SrcImgPathContext.Provider>
+            </DstFocusIdxContext.Provider>
+          </SrcFocusIdxContext.Provider>
+        </HmgRectImgPathContext.Provider>
+      </HmgRectContext.Provider>
     </div>
   );
 };
