@@ -1,6 +1,6 @@
 import "./css/App.css";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import Sidebar from "./Sidebar";
 import TabView from "./TabView";
@@ -98,6 +98,31 @@ export const useHmgRectImgPathContext = () => {
     throw new Error("useCount must be used within a CountProvider");
   }
   return context;
+};
+/* end */
+
+/* ウィンドウサイズの変化に頑健なウィンドウ情報の取得フック */
+// 「https://ryotarch.com/javascript/react/get-window-size-with-react-hooks/」より引用
+export const useWindowDimensions = () => {
+  const getWindowDimensions = () => {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height,
+    };
+  };
+
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
+  useEffect(() => {
+    const onResize = () => {
+      setWindowDimensions(getWindowDimensions());
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  return windowDimensions;
 };
 /* end */
 

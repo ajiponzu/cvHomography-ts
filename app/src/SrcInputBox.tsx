@@ -14,7 +14,7 @@ const SrcInputBox = (props: { idx: number }) => {
           onValueChange={(values, _sourceInfo) => {
             const input = parseFloat(values.value);
             /* 配列を丸ごと作り直すことで，初めて再レンダリングが実行される */
-            let newPoints = srcPoints.concat(); // 共有配列のクローン
+            const newPoints = srcPoints.concat(); // 共有配列のクローン
             newPoints[props.idx][0] = input; // 入力数値の代入
             setSrcPoints(newPoints);
             /* end */
@@ -24,7 +24,7 @@ const SrcInputBox = (props: { idx: number }) => {
           value={srcPoints[props.idx][1]}
           onValueChange={(values, _sourceInfo) => {
             const input = parseFloat(values.value);
-            let newPoints = srcPoints.concat();
+            const newPoints = srcPoints.concat();
             newPoints[props.idx][1] = input;
             setSrcPoints(newPoints);
           }}

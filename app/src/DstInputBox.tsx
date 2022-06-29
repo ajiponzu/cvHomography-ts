@@ -13,7 +13,7 @@ const DstInputBox = (props: { idx: number }) => {
           value={dstPoints[props.idx][0]}
           onValueChange={(values, _sourceInfo) => {
             const input = parseFloat(values.value);
-            let newPoints = dstPoints.concat();
+            const newPoints = dstPoints.concat();
             newPoints[props.idx][0] = input;
             setDstPoints(newPoints);
           }}
@@ -22,7 +22,7 @@ const DstInputBox = (props: { idx: number }) => {
           value={dstPoints[props.idx][1]}
           onValueChange={(values, _sourceInfo) => {
             const input = parseFloat(values.value);
-            let newPoints = dstPoints.concat();
+            const newPoints = dstPoints.concat();
             newPoints[props.idx][1] = input;
             setDstPoints(newPoints);
           }}

@@ -17,7 +17,7 @@ const SrcEditView = () => {
   const { srcPoints, setSrcPoints } = useSrcPointsContext();
   const { srcImgPath, setSrcImgPath } = useSrcImgPathContext();
 
-  let canvasArcPoints = srcPoints.concat();
+  const canvasArcPoints = srcPoints.concat();
   let [diffX, diffY] = [0.0, 0.0];
   let [moveX, moveY] = [0.0, 0.0];
   let focusIdx = -1;
@@ -37,7 +37,7 @@ const SrcEditView = () => {
     const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.strokeStyle = "rgb(0, 0, 0)";
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < canvasArcPoints.length; i++) {
       drawArcOnCanvas(ctx, i);
     }
   };
@@ -58,7 +58,7 @@ const SrcEditView = () => {
     const rect = e.currentTarget.getBoundingClientRect();
     moveX = e.clientX - rect.left;
     moveY = e.clientY - rect.top;
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < canvasArcPoints.length; i++) {
       const xColl =
         moveX > canvasArcPoints[i][0] - 20 &&
         moveX < canvasArcPoints[i][0] + 20;
@@ -90,7 +90,7 @@ const SrcEditView = () => {
       showImageOnCanvas(canvasName, newImg);
       const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
       const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < canvasArcPoints.length; i++) {
         drawArcOnCanvas(ctx, i);
       }
     };

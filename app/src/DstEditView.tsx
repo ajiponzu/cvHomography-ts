@@ -15,7 +15,7 @@ const DstEditView = () => {
   const { dstPoints, setDstPoints } = useDstPointsContext();
   const { dstImgPath, setDstImgPath } = useDstImgPathContext();
 
-  let canvasArcPoints = dstPoints.concat();
+  const canvasArcPoints = dstPoints.concat();
   let [diffX, diffY] = [0.0, 0.0];
   let [moveX, moveY] = [0.0, 0.0];
   let focusIdx = -1;
@@ -24,7 +24,7 @@ const DstEditView = () => {
     const [x, y] = canvasArcPoints[idx];
     ctx.beginPath(); // これがないとほかの描画図形と連結したり面を貼ったりしてしまう. 毎回描画情報をリセットするために必要
     ctx.arc(x, y, arcRad, 0, 2 * Math.PI, false);
-    ctx.fillStyle = colorStyles[Math.min(idx, 4)];
+    ctx.fillStyle = colorStyles[idx];
     ctx.fill();
     ctx.stroke();
   };
@@ -35,7 +35,7 @@ const DstEditView = () => {
     const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.strokeStyle = "rgb(0, 0, 0)";
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < canvasArcPoints.length; i++) {
       drawArcOnCanvas(ctx, i);
     }
   };
@@ -57,7 +57,7 @@ const DstEditView = () => {
     const rect = e.currentTarget.getBoundingClientRect();
     moveX = e.clientX - rect.left;
     moveY = e.clientY - rect.top;
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < canvasArcPoints.length; i++) {
       const xColl =
         moveX > canvasArcPoints[i][0] - 20 &&
         moveX < canvasArcPoints[i][0] + 20;
@@ -89,7 +89,7 @@ const DstEditView = () => {
       showImageOnCanvas(canvasName, newImg);
       const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
       const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < canvasArcPoints.length; i++) {
         drawArcOnCanvas(ctx, i);
       }
     };

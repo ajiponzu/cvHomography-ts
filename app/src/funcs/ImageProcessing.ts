@@ -1,4 +1,4 @@
-import cv, { Point } from "opencv-ts";
+import cv from "opencv-ts";
 
 /* 
 opencvの初期化タイミングによって，関数が見つからないなどの実行時エラーが発生するかもしれない 
@@ -43,8 +43,8 @@ export const showHomographyImage = (
     const srcPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat());
     const dstPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat());
 
-    let srcMat = cv.imread(srcCanvasName);
-    let dstMat = cv.imread(dstCanvasName);
+    const srcMat = cv.imread(srcCanvasName);
+    const dstMat = cv.imread(dstCanvasName);
 
     const transMat = cv.getPerspectiveTransform(srcPointsMat, dstPointsMat);
     cv.warpPerspective(srcMat, dstMat, transMat, dstMat.size());
@@ -62,12 +62,17 @@ export const showDstImageAddedRect = (
   srcPoints: number[][],
   dstPoints: number[][]
 ) => {
-  let outputPoints: number[][] = [];
+  const outputPoints: number[][] = [];
   try {
-    let dstMat = cv.imread(dstImg);
+    const dstMat = cv.imread(dstImg);
 
-    let inputPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, inputPoints.flat());
-    let outputPointsMat = inputPointsMat.clone();
+    const inputPointsMat = cv.matFromArray(
+      4,
+      1,
+      cv.CV_32FC2,
+      inputPoints.flat()
+    );
+    const outputPointsMat = inputPointsMat.clone();
     const srcPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat()); // 二次元配列を一次元配列に直す
     const dstPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat());
     /* [x, y, x, y, ....]のようになるため, 4, 1, CV_32FC2より
