@@ -15,19 +15,50 @@ opencvの型を使用しないようにする．
 このソース内ではしょうがないかもしれない．
 */
 
+const calcAdaptiveRatio = (
+  wid: number,
+  high: number,
+  wWid: number,
+  wHigh: number
+) => {
+  const widFlag = wid < wWid;
+  const highFlag = high < wHigh;
+  let ratio = 1.0;
+
+  if (widFlag && highFlag) {
+    ratio = 1.0;
+  } else if (!widFlag && !highFlag) {
+    ratio = Math.min(wWid / wid, wHigh / high);
+  } else if (!widFlag) {
+    ratio = wWid / wid;
+  } else if (!highFlag) {
+    ratio = wHigh / high;
+  }
+
+  return ratio;
+};
+
 /* canvas要素に画像を表示する */
 export const showImageOnCanvas = (
   canvasName: string,
-  img: HTMLImageElement
+  img: HTMLImageElement,
+  wWid: number,
+  wHigh: number
 ) => {
+  let ratio = 1.0;
   try {
     // 一応例外処理
     const mat = cv.imread(img);
-    cv.imshow(canvasName, mat);
+    const dstMat = new cv.Mat();
+    ratio = calcAdaptiveRatio(mat.cols, mat.rows, wWid, wHigh);
+    cv.resize(mat, dstMat, new cv.Size(0.0, 0.0), ratio, ratio);
+    cv.imshow(canvasName, dstMat);
     mat.delete();
+    dstMat.delete();
   } catch (err) {
     console.log("opencv's error.");
   }
+  return ratio;
 };
 
 /* 射影変換後の貼り合わせ画像を表示する */

@@ -9,6 +9,7 @@ import {
   useDstImgPathContext,
   useHmgRectContext,
   useHmgRectImgPathContext,
+  useWindowDimensions,
 } from "./App";
 
 const HmgRectResultView = () => {
@@ -18,10 +19,15 @@ const HmgRectResultView = () => {
   const { srcPoints } = useSrcPointsContext();
   const { dstPoints } = useDstPointsContext();
   const { hmgRect, setHmgRect } = useHmgRectContext();
+  const { wWidth, wHeight } = useWindowDimensions();
+
+  const canvas = document.getElementById(canvasName);
+  const wWid = wWidth - (canvas?.getBoundingClientRect().left as number);
+  const wHigh = wHeight - (canvas?.getBoundingClientRect().top as number);
 
   const img = new Image();
   img.onload = () => {
-    showImageOnCanvas(canvasName, img); // イベント処理内で呼び出す
+    showImageOnCanvas(canvasName, img, wWid, wHigh); // イベント処理内で呼び出す
     const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.strokeStyle = "rgb(0, 0, 0)";
@@ -60,7 +66,12 @@ const HmgRectResultView = () => {
         <button onClick={onButtonClick}>Run!!</button>
       </div>
       <div>
-        <canvas id={canvasName} className="outputCanvas" />
+        <canvas
+          id={canvasName}
+          className="outputCanvas"
+          width={wWidth}
+          height={wHeight}
+        />
       </div>
     </div>
   );

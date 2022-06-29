@@ -105,10 +105,10 @@ export const useHmgRectImgPathContext = () => {
 // 「https://ryotarch.com/javascript/react/get-window-size-with-react-hooks/」より引用
 export const useWindowDimensions = () => {
   const getWindowDimensions = () => {
-    const { innerWidth: width, innerHeight: height } = window;
+    const { innerWidth: wWidth, innerHeight: wHeight } = window;
     return {
-      width,
-      height,
+      wWidth,
+      wHeight,
     };
   };
 

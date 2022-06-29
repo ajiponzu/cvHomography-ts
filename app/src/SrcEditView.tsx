@@ -1,5 +1,9 @@
-import React from "react";
-import { useSrcPointsContext, useSrcImgPathContext } from "./App";
+import React, { useState } from "react";
+import {
+  useSrcPointsContext,
+  useSrcImgPathContext,
+  useWindowDimensions,
+} from "./App";
 import { showImageOnCanvas } from "./funcs/ImageProcessing";
 
 const colorStyles = [
@@ -16,6 +20,12 @@ const SrcEditView = () => {
   const canvasName = "src";
   const { srcPoints, setSrcPoints } = useSrcPointsContext();
   const { srcImgPath, setSrcImgPath } = useSrcImgPathContext();
+  const { wWidth, wHeight } = useWindowDimensions();
+  const [reload, setReload] = useState(0); // ファイルからの画像読み込みを調整するためだけのState
+
+  const canvas = document.getElementById(canvasName);
+  const wWid = wWidth - (canvas?.getBoundingClientRect().left as number);
+  const wHigh = wHeight - (canvas?.getBoundingClientRect().top as number);
 
   const canvasArcPoints = srcPoints.concat();
   let [diffX, diffY] = [0.0, 0.0];
@@ -33,7 +43,7 @@ const SrcEditView = () => {
 
   const img = new Image();
   img.onload = () => {
-    showImageOnCanvas(canvasName, img);
+    showImageOnCanvas(canvasName, img, wWid, wHigh);
     const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.strokeStyle = "rgb(0, 0, 0)";
@@ -47,7 +57,8 @@ const SrcEditView = () => {
     if (e.target.files && e.target.files[0]) {
       const newImg = new Image();
       newImg.onload = () => {
-        showImageOnCanvas(canvasName, newImg);
+        showImageOnCanvas(canvasName, newImg, wWid, wHigh);
+        setReload(reload + 1);
       };
       newImg.src = URL.createObjectURL(e.target.files[0]);
       setSrcImgPath(newImg.src);
@@ -87,7 +98,7 @@ const SrcEditView = () => {
 
     const newImg = new Image();
     newImg.onload = () => {
-      showImageOnCanvas(canvasName, newImg);
+      showImageOnCanvas(canvasName, newImg, wWid, wHigh);
       const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
       const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       for (let i = 0; i < canvasArcPoints.length; i++) {
@@ -113,6 +124,8 @@ const SrcEditView = () => {
         <canvas
           id={canvasName}
           className="outputCanvas"
+          width={wWidth}
+          height={wHeight}
           onMouseDown={onCanvasMouseDown}
           onMouseMove={onCanvasMouseMove}
           onMouseUp={onCanvasUp}
