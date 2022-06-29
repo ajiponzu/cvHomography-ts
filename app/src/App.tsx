@@ -31,15 +31,6 @@ interface IHmgRectImgPathContext {
   readonly hmgRectImgPath: string;
   setHmgRectImgPath: React.Dispatch<React.SetStateAction<string>>;
 }
-
-interface ISrcFocusIdxContext {
-  readonly srcFocusIdx: number;
-  setSrcFocusIdx: React.Dispatch<React.SetStateAction<number>>;
-}
-interface IDstFocusIdxContext {
-  readonly dstFocusIdx: number;
-  setDstFocusIdx: React.Dispatch<React.SetStateAction<number>>;
-}
 /* end */
 
 /* ReactContext群 */
@@ -62,13 +53,6 @@ const DstImgPathContext = React.createContext<IDstImgPathContext | undefined>(
 const HmgRectImgPathContext = React.createContext<
   IHmgRectImgPathContext | undefined
 >(undefined);
-
-const SrcFocusIdxContext = React.createContext<ISrcFocusIdxContext | undefined>(
-  undefined
-);
-const DstFocusIdxContext = React.createContext<IDstFocusIdxContext | undefined>(
-  undefined
-);
 /* end */
 
 /* ReactContext解凍関数群 */
@@ -110,21 +94,6 @@ export const useDstImgPathContext = () => {
 };
 export const useHmgRectImgPathContext = () => {
   const context = useContext(HmgRectImgPathContext);
-  if (context === undefined) {
-    throw new Error("useCount must be used within a CountProvider");
-  }
-  return context;
-};
-
-export const useSrcFocusIdxContext = () => {
-  const context = useContext(SrcFocusIdxContext);
-  if (context === undefined) {
-    throw new Error("useCount must be used within a CountProvider");
-  }
-  return context;
-};
-export const useDstFocusIdxContext = () => {
-  const context = useContext(DstFocusIdxContext);
   if (context === undefined) {
     throw new Error("useCount must be used within a CountProvider");
   }
@@ -190,42 +159,24 @@ const App = () => {
   };
   /* end */
 
-  /* クリックイベントで代入できる座標の添え字をReactStateを使用して監視 */
-  const [srcFocusIdx, setSrcFocusIdx] = useState(-1);
-  const [dstFocusIdx, setDstFocusIdx] = useState(-1);
-
-  const srcFocusIdxValue = {
-    srcFocusIdx,
-    setSrcFocusIdx,
-  };
-  const dstFocusIdxValue = {
-    dstFocusIdx,
-    setDstFocusIdx,
-  };
-  /* end */
-
   return (
     <div className="App">
       {/* providerに値を渡し，タグで囲むことでContextの使用を制限することができる */}
       <HmgRectContext.Provider value={hmgRectValue}>
         <HmgRectImgPathContext.Provider value={hmgRectImgPathValue}>
-          <SrcFocusIdxContext.Provider value={srcFocusIdxValue}>
-            <DstFocusIdxContext.Provider value={dstFocusIdxValue}>
-              <SrcImgPathContext.Provider value={srcImgPathValue}>
-                <DstImgPathContext.Provider value={dstImgPathValue}>
-                  <SrcPointsContext.Provider value={srcPointsValue}>
-                    <DstPointsContext.Provider value={dstPointsValue}>
-                      <Sidebar
-                        pageWrapId={"page-wrap"}
-                        outerContainerId={"outer-container"}
-                      />
-                      <TabView />
-                    </DstPointsContext.Provider>
-                  </SrcPointsContext.Provider>
-                </DstImgPathContext.Provider>
-              </SrcImgPathContext.Provider>
-            </DstFocusIdxContext.Provider>
-          </SrcFocusIdxContext.Provider>
+          <SrcImgPathContext.Provider value={srcImgPathValue}>
+            <DstImgPathContext.Provider value={dstImgPathValue}>
+              <SrcPointsContext.Provider value={srcPointsValue}>
+                <DstPointsContext.Provider value={dstPointsValue}>
+                  <Sidebar
+                    pageWrapId={"page-wrap"}
+                    outerContainerId={"outer-container"}
+                  />
+                  <TabView />
+                </DstPointsContext.Provider>
+              </SrcPointsContext.Provider>
+            </DstImgPathContext.Provider>
+          </SrcImgPathContext.Provider>
         </HmgRectImgPathContext.Provider>
       </HmgRectContext.Provider>
     </div>
