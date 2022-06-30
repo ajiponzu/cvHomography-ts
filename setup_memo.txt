@@ -11,3 +11,10 @@ reinit:
 run:
 	npm run build
 	npm start
+
+***********************
+error handling in opencv.d.ts:
+	fillConvexPoly(img: Mat, pts: MatVector, color: Scalar, lineType: LineTypes): void;
+	のptsの型をMatVectorからMatへ変更
+	修正後:
+		fillConvexPoly(img: Mat, pts: Mat, color: Scalar, lineType: LineTypes): void;

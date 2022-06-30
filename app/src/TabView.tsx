@@ -5,6 +5,7 @@ import HomeView from "./HomeView";
 import SrcEditView from "./SrcEditView";
 import DstEditView from "./DstEditView";
 import HmgRectResultView from "./HmgRectResultView";
+import HmgResultView from "./HmgResultView";
 
 /* タブによって表示コンポーネントの切り替えを行う */
 const TabView = () => {
@@ -29,7 +30,7 @@ const TabView = () => {
           <DstEditView />
         </TabPanel>
         <TabPanel>
-          <h1>Result</h1>
+          <HmgResultView />
         </TabPanel>
         <TabPanel>
           <HmgRectResultView />

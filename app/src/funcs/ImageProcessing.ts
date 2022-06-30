@@ -65,8 +65,8 @@ export const showImageOnCanvas = (
 /* キャンバスはもう生成されていると考え，canvasNameによる表示・読み込みを用いる */
 export const showHomographyImage = (
   canvasName: string,
-  srcCanvasName: string,
-  dstCanvasName: string,
+  srcImg: HTMLImageElement,
+  dstImg: HTMLImageElement,
   srcPoints: number[][],
   dstPoints: number[][]
 ) => {
@@ -74,11 +74,12 @@ export const showHomographyImage = (
     const srcPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat());
     const dstPointsMat = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat());
 
-    const srcMat = cv.imread(srcCanvasName);
-    const dstMat = cv.imread(dstCanvasName);
+    const srcMat = cv.imread(srcImg);
+    const dstMat = cv.imread(dstImg);
 
     const srcRect = cv.boundingRect(srcPointsMat);
     const dstRect = cv.boundingRect(dstPointsMat);
+
     const srcCrop = srcMat.roi(srcRect);
     const dstCrop = dstMat.roi(dstRect);
 
@@ -91,6 +92,8 @@ export const showHomographyImage = (
       dstPtsCrop.data32F[2 * i] -= dstRect.x;
       dstPtsCrop.data32F[2 * i + 1] -= dstRect.y;
     }
+    const dstPtsCropS = new cv.Mat();
+    dstPtsCrop.convertTo(dstPtsCropS, cv.CV_32SC2);
 
     const newCrop = srcCrop.clone();
     const transMat = cv.getPerspectiveTransform(srcPtsCrop, dstPtsCrop);
@@ -103,15 +106,13 @@ export const showHomographyImage = (
 
     const mask = new cv.Mat.zeros(
       new cv.Size(dstRect.width, dstRect.height),
-      cv.CV_32FC3
+      cv.CV_8UC4
     );
 
-    const matVector = new cv.MatVector();
-    matVector.push_back(dstPtsCrop);
     cv.fillConvexPoly(
       mask,
-      matVector,
-      new cv.Scalar(255.0, 255.0, 255.0),
+      dstPtsCropS,
+      new cv.Scalar(255, 255, 255, 255),
       cv.LINE_AA
     );
 
@@ -119,20 +120,15 @@ export const showHomographyImage = (
     cv.bitwise_not(mask, revMask);
 
     const dstCropMerge = new cv.Mat();
-    cv.bitwise_and(newCrop, mask, newCrop);
+    const newCropC = new cv.Mat();
+    const newCropCC = new cv.Mat();
+    cv.bitwise_and(newCrop, mask, newCropC);
+
     cv.bitwise_and(dstCrop, revMask, dstCropMerge);
-    cv.add(newCrop, dstCropMerge, newCrop);
-    newCrop.copyTo(dstCrop);
+    cv.add(newCropC, dstCropMerge, newCropCC);
+    newCropCC.copyTo(dstCrop);
 
     cv.imshow(canvasName, dstMat);
-
-    srcMat.delete();
-    dstMat.delete();
-    transMat.delete();
-    srcPointsMat.delete();
-    dstPointsMat.delete();
-    mask.delete();
-    revMask.delete();
   } catch (err) {
     console.log("opencv's error.");
   }
