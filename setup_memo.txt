@@ -1,9 +1,4 @@
 init:
-	npx create-react-app app --template typescript
-	cd app
-	npm install opencv-ts
-
-reinit:
 	cd app
 	rm package-lock.json
 	npm install npm
@@ -18,3 +13,4 @@ error handling in opencv.d.ts:
 	のptsの型をMatVectorからMatへ変更
 	修正後:
 		fillConvexPoly(img: Mat, pts: Mat, color: Scalar, lineType: LineTypes): void;
+	*npm install npmをすると元に戻るかもしれないので注意

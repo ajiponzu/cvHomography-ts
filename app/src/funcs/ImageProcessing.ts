@@ -83,6 +83,7 @@ export const showHomographyImage = (
     const srcCrop = srcMat.roi(srcRect);
     const dstCrop = dstMat.roi(dstRect);
 
+    // 射影変換後の座標の原点をそろえる
     const srcPtsCrop = srcPointsMat.clone();
     const dstPtsCrop = dstPointsMat.clone();
     for (let i = 0; i < 4; i++) {
@@ -92,9 +93,8 @@ export const showHomographyImage = (
       dstPtsCrop.data32F[2 * i] -= dstRect.x;
       dstPtsCrop.data32F[2 * i + 1] -= dstRect.y;
     }
-    const dstPtsCropS = new cv.Mat();
-    dstPtsCrop.convertTo(dstPtsCropS, cv.CV_32SC2);
 
+    // 射影変換後の画像作成
     const newCrop = srcCrop.clone();
     const transMat = cv.getPerspectiveTransform(srcPtsCrop, dstPtsCrop);
     cv.warpPerspective(
@@ -104,31 +104,57 @@ export const showHomographyImage = (
       new cv.Size(dstRect.width, dstRect.height)
     );
 
+    // 貼り合わせ元の歪み画像のマスク
     const mask = new cv.Mat.zeros(
       new cv.Size(dstRect.width, dstRect.height),
-      cv.CV_8UC4
+      cv.CV_8UC4 // デフォルトの画像データはRGBA
     );
 
+    // 点から領域を作り, 内部を塗りつぶす
+    const dstPtsCropS = new cv.Mat();
+    dstPtsCrop.convertTo(dstPtsCropS, cv.CV_32SC2);
     cv.fillConvexPoly(
       mask,
-      dstPtsCropS,
-      new cv.Scalar(255, 255, 255, 255),
+      dstPtsCropS, // なぜかtypescriptファイルではMatVector型になっているが，Mat型である
+      new cv.Scalar(255, 255, 255, 255), // RGBAにおける白
       cv.LINE_AA
     );
 
+    /* 反転マスク作成，のりづけ部分 */
     const revMask = new cv.Mat();
     cv.bitwise_not(mask, revMask);
+    /* end */
 
-    const dstCropMerge = new cv.Mat();
+    /* マスク・論理演算による貼り合わせ */
     const newCropC = new cv.Mat();
     const newCropCC = new cv.Mat();
+    const newCropCCC = new cv.Mat();
     cv.bitwise_and(newCrop, mask, newCropC);
-
-    cv.bitwise_and(dstCrop, revMask, dstCropMerge);
-    cv.add(newCropC, dstCropMerge, newCropCC);
-    newCropCC.copyTo(dstCrop);
+    cv.bitwise_and(dstCrop, revMask, newCropCC);
+    cv.add(newCropC, newCropCC, newCropCCC);
+    newCropCCC.copyTo(dstCrop);
+    /* end */
 
     cv.imshow(canvasName, dstMat);
+
+    /* cv.Matはdelete()しなければならない．めんどくさっ */
+    srcPointsMat.delete();
+    dstPointsMat.delete();
+    srcMat.delete();
+    dstMat.delete();
+    srcCrop.delete();
+    dstCrop.delete();
+    srcPtsCrop.delete();
+    dstPtsCrop.delete();
+    newCrop.delete();
+    transMat.delete();
+    mask.delete();
+    dstPtsCropS.delete();
+    revMask.delete();
+    newCropC.delete();
+    newCropCC.delete();
+    newCropCCC.delete();
+    /* end */
   } catch (err) {
     console.log("opencv's error.");
   }
