@@ -21,10 +21,12 @@ const HmgRectResultView = () => {
   const { hmgRect, setHmgRect } = useHmgRectContext();
   const { wWidth, wHeight } = useWindowDimensions();
 
+  let ratio = 1.0;
+
   const showImage = (img: HTMLImageElement, canvas: HTMLCanvasElement) => {
     const wWid = wWidth - (canvas?.getBoundingClientRect().left as number);
     const wHigh = wHeight - (canvas?.getBoundingClientRect().top as number);
-    return showImageOnCanvas(canvasName, img, wWid, wHigh);
+    ratio = showImageOnCanvas(canvasName, img, wWid, wHigh);
   };
 
   const img = new Image();
@@ -37,7 +39,7 @@ const HmgRectResultView = () => {
     for (let i = 0; i < 4; i++) {
       ctx.beginPath(); // これがないとほかの描画図形と連結したり面を貼ったりしてしまう. 毎回描画情報をリセットするために必要
       const [x, y] = hmgRect[i];
-      ctx.arc(x, y, 20, 0, 2 * Math.PI, false);
+      ctx.arc(x * ratio, y * ratio, 20, 0, 2 * Math.PI, false);
       ctx.fill();
       ctx.stroke();
     }

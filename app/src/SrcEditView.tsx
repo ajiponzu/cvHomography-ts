@@ -21,15 +21,16 @@ const SrcEditView = () => {
   const { srcImgPath, setSrcImgPath } = useSrcImgPathContext();
   const { wWidth, wHeight } = useWindowDimensions();
 
-  const canvasArcPoints = srcPoints.concat();
+  const canvasArcPoints: number[][] = [];
   let [diffX, diffY] = [0.0, 0.0];
   let [moveX, moveY] = [0.0, 0.0];
   let focusIdx = -1;
+  let ratio = 1.0;
 
   const showImage = (img: HTMLImageElement, canvas: HTMLCanvasElement) => {
     const wWid = wWidth - (canvas?.getBoundingClientRect().left as number);
     const wHigh = wHeight - (canvas?.getBoundingClientRect().top as number);
-    return showImageOnCanvas(canvasName, img, wWid, wHigh);
+    ratio = showImageOnCanvas(canvasName, img, wWid, wHigh);
   };
 
   const drawArcOnCanvas = (ctx: CanvasRenderingContext2D, idx: number) => {
@@ -45,6 +46,12 @@ const SrcEditView = () => {
   img.onload = () => {
     const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
     showImage(img, canvas);
+
+    for (const srcPoint of srcPoints) {
+      const newPoint = [srcPoint[0] * ratio, srcPoint[1] * ratio];
+      canvasArcPoints.push(newPoint);
+    }
+
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.strokeStyle = "rgb(0, 0, 0)";
     for (let i = 0; i < canvasArcPoints.length; i++) {
@@ -109,8 +116,11 @@ const SrcEditView = () => {
   };
 
   const onCanvasUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (focusIdx === -1) return;
+
     const newPoints = srcPoints.concat();
-    newPoints[focusIdx] = canvasArcPoints[focusIdx];
+    newPoints[focusIdx][0] = canvasArcPoints[focusIdx][0] / ratio;
+    newPoints[focusIdx][1] = canvasArcPoints[focusIdx][1] / ratio;
     focusIdx = -1;
     setSrcPoints(newPoints);
   };
