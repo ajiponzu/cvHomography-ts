@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   useDstPointsContext,
   useDstImgPathContext,
@@ -20,16 +19,17 @@ const DstEditView = () => {
   const { dstPoints, setDstPoints } = useDstPointsContext();
   const { dstImgPath, setDstImgPath } = useDstImgPathContext();
   const { wWidth, wHeight } = useWindowDimensions();
-  const [reload, setReload] = useState(0); // ファイルからの画像読み込みを調整するためだけのState
-
-  const canvas = document.getElementById(canvasName);
-  const wWid = wWidth - (canvas?.getBoundingClientRect().left as number);
-  const wHigh = wHeight - (canvas?.getBoundingClientRect().top as number);
 
   const canvasArcPoints = dstPoints.concat();
   let [diffX, diffY] = [0.0, 0.0];
   let [moveX, moveY] = [0.0, 0.0];
   let focusIdx = -1;
+
+  const showImage = (img: HTMLImageElement, canvas: HTMLCanvasElement) => {
+    const wWid = wWidth - (canvas?.getBoundingClientRect().left as number);
+    const wHigh = wHeight - (canvas?.getBoundingClientRect().top as number);
+    return showImageOnCanvas(canvasName, img, wWid, wHigh);
+  };
 
   const drawArcOnCanvas = (ctx: CanvasRenderingContext2D, idx: number) => {
     const [x, y] = canvasArcPoints[idx];
@@ -42,8 +42,8 @@ const DstEditView = () => {
 
   const img = new Image();
   img.onload = () => {
-    showImageOnCanvas(canvasName, img, wWid, wHigh);
     const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
+    showImage(img, canvas);
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.strokeStyle = "rgb(0, 0, 0)";
     for (let i = 0; i < canvasArcPoints.length; i++) {
@@ -57,11 +57,11 @@ const DstEditView = () => {
     if (e.target.files && e.target.files[0]) {
       const img = new Image();
       img.onload = () => {
-        showImageOnCanvas(canvasName, img, wWid, wHigh);
-        setReload(reload + 1);
+        const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
+        showImage(img, canvas);
+        setDstImgPath(img.src);
       };
       img.src = URL.createObjectURL(e.target.files[0]);
-      setDstImgPath(img.src);
     }
   };
 
@@ -98,8 +98,8 @@ const DstEditView = () => {
 
     const newImg = new Image();
     newImg.onload = () => {
-      showImageOnCanvas(canvasName, newImg, wWid, wHigh);
       const canvas = document.getElementById(canvasName) as HTMLCanvasElement;
+      showImage(newImg, canvas);
       const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       for (let i = 0; i < canvasArcPoints.length; i++) {
         drawArcOnCanvas(ctx, i);
