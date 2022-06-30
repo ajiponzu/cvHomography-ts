@@ -77,9 +77,62 @@ export const showHomographyImage = (
     const srcMat = cv.imread(srcCanvasName);
     const dstMat = cv.imread(dstCanvasName);
 
-    const transMat = cv.getPerspectiveTransform(srcPointsMat, dstPointsMat);
-    cv.warpPerspective(srcMat, dstMat, transMat, dstMat.size());
+    const srcRect = cv.boundingRect(srcPointsMat);
+    const dstRect = cv.boundingRect(dstPointsMat);
+    const srcCrop = srcMat.roi(srcRect);
+    const dstCrop = dstMat.roi(dstRect);
+
+    const srcPtsCrop = srcPointsMat.clone();
+    const dstPtsCrop = dstPointsMat.clone();
+    for (let i = 0; i < 4; i++) {
+      srcPtsCrop.data32F[2 * i] -= srcRect.x;
+      srcPtsCrop.data32F[2 * i + 1] -= srcRect.y;
+
+      dstPtsCrop.data32F[2 * i] -= dstRect.x;
+      dstPtsCrop.data32F[2 * i + 1] -= dstRect.y;
+    }
+
+    const newCrop = srcCrop.clone();
+    const transMat = cv.getPerspectiveTransform(srcPtsCrop, dstPtsCrop);
+    cv.warpPerspective(
+      srcCrop,
+      newCrop,
+      transMat,
+      new cv.Size(dstRect.width, dstRect.height)
+    );
+
+    const mask = new cv.Mat.zeros(
+      new cv.Size(dstRect.width, dstRect.height),
+      cv.CV_32FC3
+    );
+
+    const matVector = new cv.MatVector();
+    matVector.push_back(dstPtsCrop);
+    cv.fillConvexPoly(
+      mask,
+      matVector,
+      new cv.Scalar(255.0, 255.0, 255.0),
+      cv.LINE_AA
+    );
+
+    const revMask = new cv.Mat();
+    cv.bitwise_not(mask, revMask);
+
+    const dstCropMerge = new cv.Mat();
+    cv.bitwise_and(newCrop, mask, newCrop);
+    cv.bitwise_and(dstCrop, revMask, dstCropMerge);
+    cv.add(newCrop, dstCropMerge, newCrop);
+    newCrop.copyTo(dstCrop);
+
+    cv.imshow(canvasName, dstMat);
+
+    srcMat.delete();
+    dstMat.delete();
     transMat.delete();
+    srcPointsMat.delete();
+    dstPointsMat.delete();
+    mask.delete();
+    revMask.delete();
   } catch (err) {
     console.log("opencv's error.");
   }
