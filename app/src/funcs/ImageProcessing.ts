@@ -115,7 +115,8 @@ export const showHomographyImage = (
     dstPtsCrop.convertTo(dstPtsCropS, cv.CV_32SC2);
     cv.fillConvexPoly(
       mask,
-      dstPtsCropS, // なぜかtypescriptファイルではMatVector型になっているが，Mat型である
+      // @ts-ignore
+      dstPtsCropS, // なぜかopencv.d.tsファイルではMatVector型になっているが，Mat型である. ts-ignoreで踏み倒す
       new cv.Scalar(255, 255, 255, 255), // RGBAにおける白
       cv.LINE_AA
     );

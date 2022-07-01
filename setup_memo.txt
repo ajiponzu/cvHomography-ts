@@ -14,3 +14,5 @@ error handling in opencv.d.ts:
 	修正後:
 		fillConvexPoly(img: Mat, pts: Mat, color: Scalar, lineType: LineTypes): void;
 	*npm install npmをすると元に戻るかもしれないので注意
+	
+	-> @ts-ignoreを引数を渡すすぐ上の行に記述したため，上記の作業は必要なくなった．
