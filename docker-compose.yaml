@@ -7,7 +7,7 @@ services:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true # ホットリロードのために必要らしい
     tty: true
-    command: sh -c "cd app && npm start"
+    command: sh -c "cd app && npm install npm && npm start"
     volumes:
       - .:/root/project
       - ~/.npmrc:/root/.npmrc

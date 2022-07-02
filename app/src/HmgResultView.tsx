@@ -2,7 +2,6 @@ import {
   useDstImgPathContext,
   useDstPointsContext,
   useHmgImgPathContext,
-  useHmgRectContext,
   useSrcImgPathContext,
   useSrcPointsContext,
   useWindowDimensions,
